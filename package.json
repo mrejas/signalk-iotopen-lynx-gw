@@ -7,17 +7,18 @@
     "test": "echo \\\"Error: no test specified\\\" && exit 1"
   },
   "author": {
-	  "name":"Marcus Rejås",
-	  "email":"marcus.rejas@iotopen.se",
-	  "url":"https://iotopen.se"
-
+    "name": "Marcus Rejås",
+    "email": "marcus.rejas@iotopen.se",
+    "url": "https://iotopen.se"
   },
   "dependencies": {
     "debug": "^2.3.2",
+    "mosca": "^2.3.3",
     "mqtt-nedb-store": "^0.1.0"
   },
   "license": "Apache-2.0",
   "keywords": [
-    "signalk-node-server-plugin", "IoT Open Lynx"
+    "signalk-node-server-plugin",
+    "IoT Open Lynx"
   ]
 }
