@@ -264,7 +264,7 @@ module.exports = function(app) {
 							});
 
 						} else {
-							const lynxMetric = { value: normalizedPathValue.value, msg: normalizedPathValue.value.toString() }
+							const lynxMetric = { value: normalizedPathValue.value, msg: '' }
 							console.log('Adding ' + normalizedPathValue.value + ' to ' + pathInterval.path + '\n');
 							path_list[pathInterval.path] = Object.create(lynxMetric);
 						}
