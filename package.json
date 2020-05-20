@@ -1,0 +1,23 @@
+{
+  "name": "signalk-iotopen-lynx-gw",
+  "version": "0.0.1",
+  "description": "Send data from SignalK to IoT Open Lynx (beta)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \\\"Error: no test specified\\\" && exit 1"
+  },
+  "author": {
+	  "name":"Marcus Rejås",
+	  "email":"marcus.rejas@iotopen.se",
+	  "url":"https://iotopen.se"
+
+  },
+  "dependencies": {
+    "debug": "^2.3.2",
+    "mqtt-nedb-store": "^0.1.0"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "signalk-node-server-plugin", "IoT Open Lynx"
+  ]
+}
