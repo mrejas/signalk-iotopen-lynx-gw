@@ -1,6 +1,6 @@
 {
   "name": "signalk-iotopen-lynx-gw",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Send data from SignalK to IoT Open Lynx (beta)",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,8 @@
   },
   "dependencies": {
     "debug": "^2.3.2",
-    "mosca": "^2.3.3",
+    "mosca": "^2.2.0",
+    "mdns": "^2.3.3",
     "mqtt-nedb-store": "^0.1.0"
   },
   "license": "Apache-2.0",
