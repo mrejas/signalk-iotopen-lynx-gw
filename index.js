@@ -90,16 +90,20 @@ function createLynxObject(path, config) {
 	console.log('createLynxObject called with ' + path +  '\n'); 
 	var urlPrefix = '';
 	if ( config.useTLS ) {
-	urlPrefix = 'https://';
+		urlPrefix = 'https://';
 	} else {
-	urlPrefix = 'http://';
+		urlPrefix = 'http://';
 	}
-	var url = urlPrefix + config.restHost + '/api/v2/functionx/' + config.installationId + '?signalk_path=' + path;
+	var url = urlPrefix + config.restHost + '/api/v2/functionx/' + config.installationId;
 	var topic = 'obj/signalk/' + path.replace(/\./g, '/');
 
 	var options = {
 		uri: url,
 		method: 'POST',
+		headers: {
+    			'Accept': 'application/json',
+    			'Content-Type': 'application/json'
+  		},
 		json: {
 			"installation_id": config.installationId,
 			"type": "signalk",
@@ -112,9 +116,9 @@ function createLynxObject(path, config) {
 	};
 
 	Request(options, function (error, response, body) {
-		console.log(body);
+		console.log(url + ': ' + JSON.stringify(options) + ' :' + JSON.stringify(body));
 		if (error) {
-			console.log("Error createing LynxObject " + body);
+			console.log("Error creating LynxObject " + JSON.stringify(body));
 			return(false);
 		}
 
