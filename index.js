@@ -20,26 +20,20 @@
 */
 
 const id = 'signalk-iotopen-lynx-gw';
-const debug = require('debug')(id);
 const mqtt = require('mqtt');
 const NeDBStore = require('mqtt-nedb-store');
 const Request = require("request");
 
 var known_paths = [];
 
-function log_to_file(message) {
-	console.log("File logging disabled\n")
-}
-
-
 function lynxObjectExists(path, config) {
-	console.log('lynxObjectExists called with ' + path + '\n'); 
+	app.debug('lynxObjectExists called with ' + path + '\n'); 
 
 	if (known_paths.includes(path)) {
-		console.log('Known in cache\n');
+		app.debug('Known in cache\n');
 		return;
 	} else {
-		console.log('Not known in cache\n');
+		app.debug('Not known in cache\n');
 	}
 
 	var urlPrefix = '';
@@ -53,7 +47,7 @@ function lynxObjectExists(path, config) {
 	var url = urlPrefix + config.restHost + '/api/v2/functionx/' + config.installationId + '?signalk_path=' + path;
 
 
-	console.log('token:' + config.password);
+	app.debug('token:' + config.password);
 
 	var options = {
 		uri: url,
@@ -63,7 +57,7 @@ function lynxObjectExists(path, config) {
 
 	Request(options, function (error, response, body) {
 		if (error) {
-			console.log('Error cought' + error + '\n');
+			app.debug('Error cought' + error + '\n');
 		}
 
 		var result = [ "undefined" ];		
@@ -71,14 +65,14 @@ function lynxObjectExists(path, config) {
     		try {
 			result = JSON.parse(body);
     		} catch(e) {
-        		console.log(e);
+        		app.debug(e);
     		}
 
-		console.log(body);
+		app.debug(body);
 
 		if (typeof result[0] != "undefined" && path.localeCompare(result[0].meta.signalk_path) == 0) {
-			console.log(path + '==' + result[0].meta.signalk_path + '==> TRUE\n');
-			console.log('Adding to cache\n');
+			app.debug(path + '==' + result[0].meta.signalk_path + '==> TRUE\n');
+			app.debug('Adding to cache\n');
 			known_paths.push(path);
 		} else {
 			createLynxObject(path, config);
@@ -87,7 +81,7 @@ function lynxObjectExists(path, config) {
 }
 
 function createLynxObject(path, config) {
-	console.log('createLynxObject called with ' + path +  '\n'); 
+	app.debug('createLynxObject called with ' + path +  '\n'); 
 	var urlPrefix = '';
 	if ( config.useTLS ) {
 		urlPrefix = 'https://';
@@ -116,9 +110,9 @@ function createLynxObject(path, config) {
 	};
 
 	Request(options, function (error, response, body) {
-		console.log(url + ': ' + JSON.stringify(options) + ' :' + JSON.stringify(body));
+		app.debug(url + ': ' + JSON.stringify(options) + ' :' + JSON.stringify(body));
 		if (error) {
-			console.log("Error creating LynxObject " + JSON.stringify(body));
+			app.debug("Error creating LynxObject " + JSON.stringify(body));
 			return(false);
 		}
 
@@ -253,9 +247,9 @@ module.exports = function(app) {
 					.debounceImmediate(pathInterval.interval * 1000)
 					.log()
 					.onValue(normalizedPathValue => {
-						console.log('Got Value = ' + normalizedPathValue.value);
-						console.log('Got Unit = ' + normalizedPathValue.unit);
-						console.log("Checking if path exists: " + pathInterval.path);
+						app.debug('Got Value = ' + normalizedPathValue.value);
+						app.debug('Got Unit = ' + normalizedPathValue.unit);
+						app.debug("Checking if path exists: " + pathInterval.path);
 						
 						var path_list = {};
 
@@ -263,19 +257,19 @@ module.exports = function(app) {
 							// We have to create a path for each value. Adding the full value to msg.
 							Object.keys(normalizedPathValue.value).forEach(function(index, item) {
 								const lynxMetric = { value: normalizedPathValue.value[index], msg: JSON.stringify(normalizedPathValue.value) }
-								console.log('Adding ' + normalizedPathValue.value[index] + ' to ' + pathInterval.path + '.'+ index + '\n');
+								app.debug('Adding ' + normalizedPathValue.value[index] + ' to ' + pathInterval.path + '.'+ index + '\n');
 								path_list[pathInterval.path + '.'+ index] = Object.create(lynxMetric);
 							});
 
 						} else {
 							const lynxMetric = { value: normalizedPathValue.value, msg: '' }
-							console.log('Adding ' + normalizedPathValue.value + ' to ' + pathInterval.path + '\n');
+							app.debug('Adding ' + normalizedPathValue.value + ' to ' + pathInterval.path + '\n');
 							path_list[pathInterval.path] = Object.create(lynxMetric);
 						}
 
 
 						Object.keys(path_list).forEach(function(path, value) {
-							console.log('path=' + path + ' value=' + path_list[path] + '\n');
+							app.debug('path=' + path + ' value=' + path_list[path] + '\n');
 							lynxObjectExists(path, options);
 							client.publish(
 								options.clientId.concat('/obj/signalk/', path.replace(/\./g, '/')),
