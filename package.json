@@ -1,6 +1,6 @@
 {
   "name": "signalk-iotopen-lynx-gw",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Send data from SignalK to IoT Open Lynx (beta)",
   "main": "index.js",
   "scripts": {
